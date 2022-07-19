@@ -17,6 +17,15 @@ pub mod game {
 
         Ok(())
     }
+
+    pub fn change_user_name(ctx: Context<ChangeUserName>, new_name: String) -> Result<()> {
+        let user_stats = &mut ctx.accounts.user_stats;
+        require!(new_name.as_bytes().len() <= 64, MyError::NameTooLong);
+        
+        user_stats.name = new_name;
+
+        Ok(())
+    }
 }
 
 #[account]
@@ -48,4 +57,14 @@ pub struct CreateUserStats<'info> {
 
     // System program itself
     system_program: Program<'info, System>,
+}
+
+// Validation struct 
+#[derive(Accounts)]
+pub struct ChangeUserName<'info> {
+    pub user: Signer<'info>,
+    #[account(
+        mut, seeds = [b"user-stats", user.key.as_ref()], bump = user_stats.bump
+    )]
+    pub user_stats: Account<'info, UserStats>,
 }
