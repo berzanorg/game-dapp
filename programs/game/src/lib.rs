@@ -13,7 +13,7 @@ pub mod game {
         require!(name.as_bytes().len() <= 64, MyError::NameTooLong);
 
         user_stats.name = name;
-        user_stats.bump = *ctx.bumps.get("user-stats").unwrap();
+        user_stats.bump = *ctx.bumps.get("user_stats").unwrap();
 
         Ok(())
     }
